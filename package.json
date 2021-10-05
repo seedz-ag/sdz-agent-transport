@@ -1,0 +1,11 @@
+{
+  "name": "sdz-agent-transport",
+  "version": "1.0.0",
+  "license": "Apache",
+  "dependencies": {
+    "axios": "^0.22.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.4.3"
+  }
+}

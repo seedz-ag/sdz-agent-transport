@@ -4,6 +4,6 @@ export default class TransportSeedz {
     private credentials;
     private token;
     constructor(credentials: any);
-    authenticate(): Promise<any>;
+    authenticate(): Promise<boolean>;
     send(endpoint: string, data: any): Promise<AxiosResponse>;
 }

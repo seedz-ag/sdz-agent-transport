@@ -14,10 +14,14 @@ class TransportSeedz {
     async authenticate() {
         const response = await this.agent.post("auth/login", this.credentials);
         this.token = response.data.accessToken;
+        if (response.data.accessToken) {
+            return true;
+        }
+            return false;
     }
     async send(endpoint, data) {
         if (!this.token) {
-            throw new Error("CANNOT SEND DATA WITHOUT AN VALID TOKEN");
+            await this.authenticate();
         }
         return this.agent.post(endpoint, data, {
             headers: {

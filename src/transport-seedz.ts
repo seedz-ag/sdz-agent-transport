@@ -12,14 +12,17 @@ export default class TransportSeedz {
     this.credentials = credentials;
   }
 
-  async authenticate(): Promise<any> {
+  async authenticate(): Promise<boolean> {
     const response = await this.agent.post("auth/login", this.credentials);
     this.token = response.data.accessToken;
+    if (response.data.accessToken) {
+      return true;
+    } else return false;
   }
 
   async send(endpoint: string, data: any): Promise<AxiosResponse> {
     if (!this.token) {
-      throw new Error("CANNOT SEND DATA WITHOUT AN VALID TOKEN");
+      await this.authenticate();
     }
     return this.agent.post(endpoint, data, {
       headers: {

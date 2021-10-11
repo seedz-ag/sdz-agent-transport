@@ -1,1 +1,1 @@
-module.exports = require('./dist/transport-seedz')
+module.exports = require('./dist/transport-seedz');

@@ -7,28 +7,22 @@ export default class TransportSeedz {
 
   constructor(credentials: any) {
     this.agent = axios.create({
-      baseURL: "https://landing.seedz.ag/api/",
+      baseURL: "https://landing-dev.seedz.ag/api/v1/",
     });
     this.credentials = credentials;
   }
 
-  async authenticate(): Promise<void> {
-    try {
-      const response = await this.agent.post("auth", this.credentials, {});
-    // this.token = response
-    } catch (error: any) {
-      this.onError(error);
-    }
+  async authenticate(): Promise<boolean> {
+    const response = await this.agent.post("auth/login", this.credentials);
+    this.token = response.data.accessToken;
+    if (response.data.accessToken) {
+      return true;
+    } else return false;
   }
 
-  private onError(error: any): void {
-    console.log(error.request);
-    throw new Error(error.response.statusText);
-  }
-
-  send(endpoint: string, data: any[]): Promise<AxiosResponse> | void {
+  async send(endpoint: string, data: any): Promise<AxiosResponse|void> {
     if (!this.token) {
-      throw new Error("CANNOT SEND DATA WITHOUT AN VALID TOKEN");
+      await this.authenticate();
     }
     try {
       return this.agent.post(endpoint, data, {
@@ -37,7 +31,7 @@ export default class TransportSeedz {
         },
       });
     } catch (error: any) {
-      this.onError(error);
+      //this.onError(error);
     }
   }
 }

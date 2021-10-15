@@ -80,14 +80,24 @@ export default class TransportSeedz {
     });
   }
 
-  async send(protocol: string, entity: string, page: number, content: any): Promise<AxiosResponse | void> {
+  async send(
+    protocol: string,
+    entity: string,
+    page: number,
+    content: any
+  ): Promise<AxiosResponse | void> {
     try {
-      return this.request("POST", "/data/receive", {
-        protocol,
-        entity,
-        content,
-        page
-      }, true);
+      return this.request(
+        "POST",
+        "/data/receive",
+        {
+          protocol,
+          entity,
+          content,
+          page,
+        },
+        true
+      );
     } catch (exception: unknown) {
       this.onError(exception);
     }

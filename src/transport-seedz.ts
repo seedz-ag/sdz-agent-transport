@@ -1,4 +1,10 @@
-import axios, { Axios, AxiosError, AxiosResponse } from "axios";
+import axios, {
+  Axios,
+  AxiosError,
+  AxiosRequestConfig,
+  AxiosResponse,
+  Method,
+} from "axios";
 
 export default class TransportSeedz {
   private agent: Axios;
@@ -13,25 +19,77 @@ export default class TransportSeedz {
   }
 
   async authenticate(): Promise<boolean> {
-    const response = await this.agent.post("auth/login", this.credentials);
-    this.token = response.data.accessToken;
-    if (response.data.accessToken) {
+    const response = await this.request<AxiosResponse<any>>(
+      "POST",
+      "auth/login",
+      this.credentials
+    );
+    if (response.data?.accessToken) {
+      this.token = response.data.accessToken;
       return true;
-    } else return false;
+    } else {
+      return false;
+    }
   }
 
-  async send(endpoint: string, data: any): Promise<AxiosResponse|void> {
-    if (!this.token) {
+  private getHeaders(): AxiosRequestConfig {
+    return {
+      headers: {
+        Authentication: this.token,
+      },
+    };
+  }
+
+  async plan(
+    entity: string,
+    qntPages: number,
+    qntRegisters: number
+  ): Promise<AxiosResponse | void> {
+    try {
+      return this.request(
+        "POST",
+        "/processing/planning",
+        {
+          entity,
+          qntPages,
+          qntRegisters,
+        },
+        true
+      );
+    } catch (exception: unknown) {
+      this.onError(exception);
+    }
+  }
+
+  private onError(exception: unknown): void {}
+
+  private async request<T>(
+    method: Method = "GET",
+    url: string,
+    data: any,
+    needsToken = false
+  ): Promise<T> {
+    if (needsToken && !this.token) {
       await this.authenticate();
     }
+    return this.agent.request({
+      ...this.getHeaders(),
+      data,
+      method,
+      url,
+    });
+  }
+
+  async send(protocol: string, entity: string, page: number, content: any): Promise<AxiosResponse | void> {
     try {
-      return this.agent.post(endpoint, data, {
-        headers: {
-          Authentication: this.token,
-        },
-      });
-    } catch (error: any) {
-      //this.onError(error);
+      return this.request("POST", "/data/receive", {
+        protocol,
+        entity,
+        content,
+        page
+      }, true);
+    } catch (exception: unknown) {
+      this.onError(exception);
     }
   }
 }

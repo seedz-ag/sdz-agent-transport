@@ -40,20 +40,12 @@ export default class TransportSeedz {
     };
   }
 
-  async plan(
-    entity: string,
-    qntPages: number,
-    qntRegisters: number
-  ): Promise<AxiosResponse | void> {
+  async plan(summary: any): Promise<AxiosResponse | void> {
     try {
       return this.request(
         "POST",
         "/processing/planning",
-        {
-          entity,
-          qntPages,
-          qntRegisters,
-        },
+        summary,
         true
       );
     } catch (exception: unknown) {

@@ -21,9 +21,14 @@ export default class {
         map.credentials
       );
       switch (map.type) {
-        case 'data': this.auth = response.headers[map.response]; break;
-        case 'headers': this.auth = response.headers[map.response]; break;
-        default: throw new Error('UNKNOW TYPE OF AUTHENTICATION');
+        case "data":
+          this.auth = response.data[map.response];
+          break;
+        case "headers":
+          this.auth = response.headers[map.response];
+          break;
+        default:
+          throw new Error("UNKNOW TYPE OF AUTHENTICATION");
       }
     }
   }
@@ -35,17 +40,42 @@ export default class {
     return this;
   }
 
-  process(type: string) {
-    const map = this.map[type];
-
-    if (!map) {
-      throw new Error('UNKOW MAP');
+  private mapResponse(map: any, response: AxiosResponse): any {
+    switch (map.type) {
+      case "data":
+        this.auth = response.data[map.response];
+        break;
+      case "headers":
+        this.auth = response.headers[map.response];
+        break;
+      default:
+        throw new Error("UNKNOW TYPE OF AUTHENTICATION");
     }
   }
 
+  async process(type: string, data: any) {
+    const map = this.map[type];
+
+    if (!map) {
+      throw new Error("UNKOW MAP");
+    }
+    const response = await this.request(
+      map.method || "POST",
+      map.url,
+      data
+    );
+
+    return this.mapResponse(map, response);
+  }
+
   request(method: any, url: string, data: any): Promise<AxiosResponse> {
+    const headers: any = {};
+    if (this.auth) {
+      headers.Authorization = `Bearer ${this.auth}`;
+    }
     return this.agent.request({
       data,
+      headers,
       method,
       url,
     });

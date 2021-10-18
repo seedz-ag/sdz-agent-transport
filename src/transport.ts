@@ -10,6 +10,6 @@ export default class AbstractTransport {
       baseURL,
     });
   }
-  init(scope: any, connector: any): void {}
+  async init(scope: any, connector: any): Promise<void> {}
   onError(exception: unknown): void {}
 }

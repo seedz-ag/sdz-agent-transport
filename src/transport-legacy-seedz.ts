@@ -19,7 +19,7 @@ export default class TransportLegacySeedz extends Transport {
   }
 
   setCredentials(credentials: any): this {
-    this.credentials = this.credentials;
+    this.credentials = credentials;
     return this;
   }
 

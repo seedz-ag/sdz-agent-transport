@@ -5,7 +5,7 @@ import {
 } from "axios";
 import Transport from "./transport";
 
-export default class TransportSeedz extends Transport {
+export default class TransportLegacySeedz extends Transport {
   private credentials: any;
   private token: string;
 

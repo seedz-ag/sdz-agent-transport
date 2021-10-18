@@ -37,7 +37,7 @@ export default class TransportLegacySeedz extends Transport {
   private getHeaders(): AxiosRequestConfig {
     return {
       headers: {
-        Authentication: this.token,
+        Authentication: this.token || "",
       },
     };
   }

@@ -13,7 +13,7 @@ class TransportLegacySeedz extends transport_1.default {
         return this.credentials;
     }
     setCredentials(credentials) {
-        this.credentials = this.credentials;
+        this.credentials = credentials;
         return this;
     }
     async authenticate() {

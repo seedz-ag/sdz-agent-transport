@@ -26,7 +26,7 @@ class TransportLegacySeedz extends transport_1.default {
     getHeaders() {
         return {
             headers: {
-                Authentication: this.token,
+                Authentication: this.token || "",
             },
         };
     }

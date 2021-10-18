@@ -45,7 +45,7 @@ export default class TransportSeedz extends Transport {
     };
   }
 
-  async init(scope: any, connector: any): Promise<AxiosResponse | void> {
+  async init(scope: any, connector: any): Promise<void> {
     try {
       const repository = await connector.getRepository();
       const summary: any[] = [] ;

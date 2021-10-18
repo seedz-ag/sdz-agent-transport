@@ -10,7 +10,7 @@ export default class TransportLegacySeedz extends Transport {
   private token: string;
 
   constructor(credentials: any) {
-    super("https://landing-dev.seedz.ag/api/v1/");
+    super("https://landing.dev.seedz.ag/api/v1/");
     this.setCredentials(credentials);
   }
 

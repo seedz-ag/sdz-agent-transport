@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const transport_1 = __importDefault(require("./transport"));
 class TransportLegacySeedz extends transport_1.default {
     constructor(credentials) {
-        super("https://landing-dev.seedz.ag/api/v1/");
+        super("https://landing.dev.seedz.ag/api/v1/");
         this.setCredentials(credentials);
     }
     getCredentials() {

@@ -1,2 +1,1 @@
-import TransportSeedz from "./src/transport-seedz";
-export default TransportSeedz;
+export { default as TransportLegacySeedz } from "./src/transport-legacy-seedz";

@@ -50,13 +50,13 @@ export default class TransportLegacySeedz extends Transport {
       for(const entity of scope) {
         const qtnRegisters = await repository.count(entity.name.toLowerCase());
         summary.push({
-          entity: entity.name,
+          entity: 'cliente',
           qtnPages: Math.ceil(qtnRegisters / 100).toFixed(0),
           qtnRegisters,
         });
       }
 
-      return this.request(
+      return await this.request(
         "POST",
         "/processing/planning",
         { summary },

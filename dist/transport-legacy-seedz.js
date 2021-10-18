@@ -42,7 +42,7 @@ class TransportLegacySeedz extends transport_1.default {
                     qtnRegisters,
                 });
             }
-            return this.request("POST", "/processing/planning", { summary }, true);
+            return await this.request("POST", "/processing/planning", { summary }, true);
         }
         catch (exception) {
             this.onError(exception);

@@ -1,28 +1,33 @@
-import axios, {
-  Axios,
-  AxiosError,
+import {
   AxiosRequestConfig,
   AxiosResponse,
   Method,
 } from "axios";
+import Transport from "./transport";
 
-export default class TransportSeedz {
-  private agent: Axios;
+export default class TransportSeedz extends Transport {
   private credentials: any;
   private token: string;
 
   constructor(credentials: any) {
-    this.agent = axios.create({
-      baseURL: "https://landing-dev.seedz.ag/api/v1/",
-    });
-    this.credentials = credentials;
+    super("https://landing-dev.seedz.ag/api/v1/");
+    this.setCredentials(credentials);
+  }
+
+  getCredentials(): any {
+    return this.credentials;
+  }
+
+  setCredentials(credentials: any): this {
+    this.credentials = this.credentials;
+    return this;
   }
 
   async authenticate(): Promise<boolean> {
     const response = await this.request<AxiosResponse<any>>(
       "POST",
       "auth/login",
-      this.credentials
+      this.getCredentials()
     );
     if (response.data?.accessToken) {
       this.token = response.data.accessToken;
@@ -40,20 +45,30 @@ export default class TransportSeedz {
     };
   }
 
-  async plan(summary: any): Promise<AxiosResponse | void> {
+  async init(scope: any, connector: any): Promise<AxiosResponse | void> {
     try {
+      const repository = await connector.getRepository();
+      const summary: any[] = [] ;
+
+      for(const entity of scope) {
+        const qtnRegisters = await repository.count(entity.name.toLowerCase());
+        summary.push({
+          entity: entity.name,
+          qtnPages: Math.ceil(qtnRegisters / 100).toFixed(0),
+          qtnRegisters,
+        });
+      }
+
       return this.request(
         "POST",
         "/processing/planning",
-        summary,
+        { summary },
         true
       );
     } catch (exception: unknown) {
       this.onError(exception);
     }
   }
-
-  private onError(exception: unknown): void {}
 
   private async request<T>(
     method: Method = "GET",

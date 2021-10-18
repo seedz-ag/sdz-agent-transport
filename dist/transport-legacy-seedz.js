@@ -21,10 +21,6 @@ class TransportLegacySeedz extends transport_1.default {
         const response = await this.request("POST", "auth/login", this.getCredentials());
         if ((_a = response.data) === null || _a === void 0 ? void 0 : _a.accessToken) {
             this.token = response.data.accessToken;
-            return true;
-        }
-        else {
-            return false;
         }
     }
     getHeaders() {

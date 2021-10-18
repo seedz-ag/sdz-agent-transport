@@ -6,7 +6,7 @@ export default class TransportLegacySeedz extends Transport {
     constructor(credentials: any);
     getCredentials(): any;
     setCredentials(credentials: any): this;
-    authenticate(): Promise<boolean>;
+    authenticate(): Promise<void>;
     private getHeaders;
     init(scope: any, connector: any): Promise<void>;
     private request;

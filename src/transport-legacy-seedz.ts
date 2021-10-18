@@ -23,7 +23,7 @@ export default class TransportLegacySeedz extends Transport {
     return this;
   }
 
-  async authenticate(): Promise<boolean> {
+  async authenticate(): Promise<void> {
     const response = await this.request<AxiosResponse<any>>(
       "POST",
       "auth/login",
@@ -31,9 +31,6 @@ export default class TransportLegacySeedz extends Transport {
     );
     if (response.data?.accessToken) {
       this.token = response.data.accessToken;
-      return true;
-    } else {
-      return false;
     }
   }
 

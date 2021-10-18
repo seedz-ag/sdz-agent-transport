@@ -13,6 +13,7 @@ class AbstractTransport {
             baseURL,
         });
     }
+    async authenticate() { }
     async init(scope, connector) { }
     onError(exception) { }
 }

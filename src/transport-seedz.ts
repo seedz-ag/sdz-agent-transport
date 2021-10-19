@@ -11,9 +11,8 @@ export default class TransportSeedz extends Transport {
     url: string,
     data: any,
     needsToken = false
-    
   ): Promise<T> {
-    console.log(url)
+    console.log(url);
     return this.agent.request({
       data,
       method,
@@ -27,18 +26,16 @@ export default class TransportSeedz extends Transport {
         "POST",
         "/batch",
         {
-          batch: [
-            {
-              body,
-              id: "",
-              method: "POST",
-              headers: {
-                client: "",
-                guid: ""
-              },
-              uri: this.getURIMap(entity),
-            }
-          ]
+          batch: body.map((item: any) => ({
+            body: item,
+            id: "",
+            method: "POST",
+            headers: {
+              client: "",
+              guid: "",
+            },
+            uri: this.getURIMap(entity),
+          })),
         },
         true
       );
@@ -49,7 +46,7 @@ export default class TransportSeedz extends Transport {
 
   private getURIMap(entity: string): string {
     const map: { [key: string]: string } = {
-      cliente: 'client'
+      cliente: "client",
     };
     return map[entity];
   }

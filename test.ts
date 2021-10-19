@@ -2,12 +2,9 @@ import Transport from "./src/transport-seedz";
 
 (async () => {
   const t = new Transport('')
+    console.log(await t.send('cliente', [{ entity: "cliente", qntPages: 1, qntRegisters: 1 }] ));
+    console.log(await t.send('cliente', [{ entity: "cliente", qntPages: 1, qntRegisters: 1 }] ));
+    console.log(await t.send('cliente', [{ entity: "cliente", qntPages: 1, qntRegisters: 1 }] ));
+    console.log(await t.send('cliente', [{ entity: "cliente", qntPages: 1, qntRegisters: 1 }] ));
 
-  try {
-    
-    console.log(t);
-    console.log(await t.send('cliente', { summary: [{ entity: "cliente", qntPages: 1, qntRegisters: 1 }] }));
-  } catch (e) {
-    console.log(e);
-  }
 })();

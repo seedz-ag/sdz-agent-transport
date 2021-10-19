@@ -16,17 +16,6 @@ class TransportSeedz extends transport_1.default {
         });
     }
     async send(entity, body) {
-        // const teste = body.map((item: any, index: any) => ({
-        //   body: item,
-        //   id: index,
-        //   method: "POST",
-        //   headers: {
-        //     client: "",
-        //     guid: "",
-        //   },
-        //   uri: this.getURIMap(entity),
-        // }))
-        console.log(body);
         try {
             return this.request("POST", "/batch", {
                 batch: body.map((item, index) => ({

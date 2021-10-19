@@ -20,17 +20,6 @@ export default class TransportSeedz extends Transport {
   }
 
   async send(entity: string, body: any): Promise<AxiosResponse | void> {
-    // const teste = body.map((item: any, index: any) => ({
-    //   body: item,
-    //   id: index,
-    //   method: "POST",
-    //   headers: {
-    //     client: "",
-    //     guid: "",
-    //   },
-    //   uri: this.getURIMap(entity),
-    // }))
-     console.log(body)
     try {
       
       return this.request(

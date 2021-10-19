@@ -12,7 +12,6 @@ export default class TransportSeedz extends Transport {
     data: any,
     needsToken = false
   ): Promise<T> {
-    console.log(url);
     return this.agent.request({
       data,
       method,
@@ -21,14 +20,26 @@ export default class TransportSeedz extends Transport {
   }
 
   async send(entity: string, body: any): Promise<AxiosResponse | void> {
+    // const teste = body.map((item: any, index: any) => ({
+    //   body: item,
+    //   id: index,
+    //   method: "POST",
+    //   headers: {
+    //     client: "",
+    //     guid: "",
+    //   },
+    //   uri: this.getURIMap(entity),
+    // }))
+     console.log(body)
     try {
+      
       return this.request(
         "POST",
         "/batch",
         {
-          batch: body.map((item: any) => ({
+          batch: body.map((item: any, index: any) => ({
             body: item,
-            id: "",
+            id: index,
             method: "POST",
             headers: {
               client: "",

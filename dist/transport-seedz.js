@@ -9,7 +9,6 @@ class TransportSeedz extends transport_1.default {
         super("http://localhost:3000/");
     }
     async request(method = "GET", url, data, needsToken = false) {
-        console.log(url);
         return this.agent.request({
             data,
             method,
@@ -17,20 +16,29 @@ class TransportSeedz extends transport_1.default {
         });
     }
     async send(entity, body) {
+        // const teste = body.map((item: any, index: any) => ({
+        //   body: item,
+        //   id: index,
+        //   method: "POST",
+        //   headers: {
+        //     client: "",
+        //     guid: "",
+        //   },
+        //   uri: this.getURIMap(entity),
+        // }))
+        console.log(body);
         try {
             return this.request("POST", "/batch", {
-                batch: [
-                    {
-                        body,
-                        id: "",
-                        method: "POST",
-                        headers: {
-                            client: "",
-                            guid: ""
-                        },
-                        uri: this.getURIMap(entity),
-                    }
-                ]
+                batch: body.map((item, index) => ({
+                    body: item,
+                    id: index,
+                    method: "POST",
+                    headers: {
+                        client: "",
+                        guid: "",
+                    },
+                    uri: this.getURIMap(entity),
+                })),
             }, true);
         }
         catch (exception) {
@@ -39,7 +47,7 @@ class TransportSeedz extends transport_1.default {
     }
     getURIMap(entity) {
         const map = {
-            cliente: 'client'
+            cliente: "client",
         };
         return map[entity];
     }

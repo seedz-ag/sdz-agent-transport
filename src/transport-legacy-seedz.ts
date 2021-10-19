@@ -8,6 +8,8 @@ import Transport from "./transport";
 export default class TransportLegacySeedz extends Transport {
   private credentials: any;
   private token: string;
+  private protocol: string;
+  private pages: any = {}
 
   constructor(credentials: any) {
     super("https://landing.dev.seedz.ag/api/v1/");
@@ -37,7 +39,7 @@ export default class TransportLegacySeedz extends Transport {
   private getHeaders(): AxiosRequestConfig {
     return {
       headers: {
-        Authentication: this.token || "",
+        Authorization: this.token ? `Bearer ${ this.token }` : "",
       },
     };
   }
@@ -47,21 +49,22 @@ export default class TransportLegacySeedz extends Transport {
       const repository = await connector.getRepository();
       const summary: any[] = [] ;
 
-      for(const entity of scope) {
-        const qtnRegisters = (await repository.count(entity.name.toLowerCase()))[0].total;
+      for (const entity of scope) {
+        const qntRegisters = parseInt((await repository.count(entity.name.toLowerCase()))[0].total);
         summary.push({
-          entity: entity.name,
-          qtnPages: Math.ceil(qtnRegisters / 100).toFixed(0),
-          qtnRegisters,
+            entity: entity.name,
+            qntPages: parseInt(Math.ceil(qntRegisters / 100).toFixed(0)),
+            qntRegisters: qntRegisters,
         });
-      }
-
-      return await this.request(
+    }
+      const response =  await this.request(
         "POST",
         "/processing/planning",
         { summary },
         true
       );
+      this.protocol = response.data.protocol
+
     } catch (exception: unknown) {
       this.onError(exception);
     }
@@ -72,7 +75,7 @@ export default class TransportLegacySeedz extends Transport {
     url: string,
     data: any,
     needsToken = false
-  ): Promise<T> {
+  ): Promise<any> {
     if (needsToken && !this.token) {
       await this.authenticate();
     }
@@ -85,20 +88,24 @@ export default class TransportLegacySeedz extends Transport {
   }
 
   async send(
-    protocol: string,
     entity: string,
-    page: number,
     content: any
   ): Promise<AxiosResponse | void> {
     try {
+      if(!this.pages [entity])
+      {
+        this.pages[entity] = 0;
+      }
+      this.pages[entity]++
+
       return this.request(
         "POST",
         "/data/receive",
         {
-          protocol,
+          protocol : this.protocol,
           entity,
+          page: this.pages[entity],
           content,
-          page,
         },
         true
       );

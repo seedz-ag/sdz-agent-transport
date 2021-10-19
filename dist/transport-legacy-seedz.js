@@ -7,6 +7,7 @@ const transport_1 = __importDefault(require("./transport"));
 class TransportLegacySeedz extends transport_1.default {
     constructor(credentials) {
         super("https://landing.dev.seedz.ag/api/v1/");
+        this.pages = {};
         this.setCredentials(credentials);
     }
     getCredentials() {
@@ -26,7 +27,7 @@ class TransportLegacySeedz extends transport_1.default {
     getHeaders() {
         return {
             headers: {
-                Authentication: this.token || "",
+                Authorization: this.token ? `Bearer ${this.token}` : "",
             },
         };
     }
@@ -35,14 +36,15 @@ class TransportLegacySeedz extends transport_1.default {
             const repository = await connector.getRepository();
             const summary = [];
             for (const entity of scope) {
-                const qtnRegisters = (await repository.count(entity.name.toLowerCase()))[0].total;
+                const qntRegisters = parseInt((await repository.count(entity.name.toLowerCase()))[0].total);
                 summary.push({
                     entity: entity.name,
-                    qtnPages: Math.ceil(qtnRegisters / 100).toFixed(0),
-                    qtnRegisters,
+                    qntPages: parseInt(Math.ceil(qntRegisters / 100).toFixed(0)),
+                    qntRegisters: qntRegisters,
                 });
             }
-            return await this.request("POST", "/processing/planning", { summary }, true);
+            const response = await this.request("POST", "/processing/planning", { summary }, true);
+            this.protocol = response.data.protocol;
         }
         catch (exception) {
             this.onError(exception);
@@ -59,13 +61,17 @@ class TransportLegacySeedz extends transport_1.default {
             url,
         });
     }
-    async send(protocol, entity, page, content) {
+    async send(entity, content) {
         try {
+            if (!this.pages[entity]) {
+                this.pages[entity] = 0;
+            }
+            this.pages[entity]++;
             return this.request("POST", "/data/receive", {
-                protocol,
+                protocol: this.protocol,
                 entity,
+                page: this.pages[entity],
                 content,
-                page,
             }, true);
         }
         catch (exception) {

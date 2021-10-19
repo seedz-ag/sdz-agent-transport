@@ -35,7 +35,7 @@ class TransportLegacySeedz extends transport_1.default {
             const repository = await connector.getRepository();
             const summary = [];
             for (const entity of scope) {
-                const qtnRegisters = await repository.count(entity.name.toLowerCase());
+                const qtnRegisters = (await repository.count(entity.name.toLowerCase()))[0].total;
                 summary.push({
                     entity: entity.name,
                     qtnPages: Math.ceil(qtnRegisters / 100).toFixed(0),

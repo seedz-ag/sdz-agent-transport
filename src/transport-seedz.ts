@@ -3,7 +3,7 @@ import Transport from "./transport";
 
 export default class TransportSeedz extends Transport {
   constructor(credentials: any) {
-    super("");
+    super("http://localhost:3000/");
   }
 
   private async request<T>(
@@ -11,7 +11,9 @@ export default class TransportSeedz extends Transport {
     url: string,
     data: any,
     needsToken = false
+    
   ): Promise<T> {
+    console.log(url)
     return this.agent.request({
       data,
       method,
@@ -25,14 +27,18 @@ export default class TransportSeedz extends Transport {
         "POST",
         "/batch",
         {
-          body,
-          id: "",
-          method: "POST",
-          headers: {
-            client: "",
-            guid: ""
-          },
-          uri: this.getURIMap(entity),
+          batch: [
+            {
+              body,
+              id: "",
+              method: "POST",
+              headers: {
+                client: "",
+                guid: ""
+              },
+              uri: this.getURIMap(entity),
+            }
+          ]
         },
         true
       );

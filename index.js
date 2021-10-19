@@ -1,1 +1,8 @@
-module.exports = require('./dist/transport-seedz');
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.TransportLegacySeedz = void 0;
+const transport_legacy_seedz_1 = __importDefault(require("./dist/transport-legacy-seedz"));
+exports.TransportLegacySeedz = transport_legacy_seedz_1.default;

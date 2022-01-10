@@ -35,12 +35,12 @@ export default class TransportSeedz extends Transport {
     method: Method = "GET",
     url: string,
     data: any,
-    needsToken = true
+    needsAuthentication = false 
   ): Promise<T> {
     return this.agent.request({
       data,
       headers: {
-        ...(needsToken ? this.getCredentials() : {}) 
+        ...(needsAuthentication ? this.getCredentials() : {}) 
       },
       method,
       url,

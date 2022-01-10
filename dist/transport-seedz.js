@@ -25,11 +25,11 @@ class TransportSeedz extends transport_1.default {
         this.uriMap = uriMap;
         return this;
     }
-    async request(method = "GET", url, data, needsToken = true) {
+    async request(method = "GET", url, data, needsAuthentication = false) {
         return this.agent.request({
             data,
             headers: {
-                ...(needsToken ? this.getCredentials() : {})
+                ...(needsAuthentication ? this.getCredentials() : {})
             },
             method,
             url,

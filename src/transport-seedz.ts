@@ -1,20 +1,47 @@
 import { AxiosResponse, Method } from "axios";
 import Transport from "./transport";
+import { Credentials } from "sdz-agent-types";
 
 export default class TransportSeedz extends Transport {
-  constructor(credentials: any) {
-    super("http://localhost:3000/");
+  private credentials: Credentials;
+  private uriMap: { [key: string]: string } = {};
+
+  constructor(apiUrl: string, credentials: Credentials) {
+    super(apiUrl);
+    this.setCredentials(credentials);
+  }
+
+  // GETTERS AND SETTERS
+
+  getCredentials(): Credentials | undefined {
+    return this.credentials;
+  }
+
+  setCredentials(credentials: Credentials): this {
+    this.credentials = credentials;
+    return this;
+  }
+
+  getUriMap(): { [key: string]: string } {
+    return this.uriMap;
+  }
+
+  setUriMap(uriMap: { [key: string]: string}): this {
+    this.uriMap = uriMap;
+    return this;
   }
 
   private async request<T>(
     method: Method = "GET",
     url: string,
     data: any,
-    needsToken = false
+    needsToken = true
   ): Promise<T> {
-    console.log(url);
     return this.agent.request({
       data,
+      headers: {
+        ...(needsToken ? this.getCredentials() : {}) 
+      },
       method,
       url,
     });
@@ -22,32 +49,9 @@ export default class TransportSeedz extends Transport {
 
   async send(entity: string, body: any): Promise<AxiosResponse | void> {
     try {
-      return this.request(
-        "POST",
-        "/batch",
-        {
-          batch: body.map((item: any) => ({
-            body: item,
-            id: "",
-            method: "POST",
-            headers: {
-              client: "",
-              guid: "",
-            },
-            uri: this.getURIMap(entity),
-          })),
-        },
-        true
-      );
+      return this.request("POST", this.uriMap[entity], body, true);
     } catch (exception: unknown) {
       this.onError(exception);
     }
-  }
-
-  private getURIMap(entity: string): string {
-    const map: { [key: string]: string } = {
-      cliente: "client",
-    };
-    return map[entity];
   }
 }

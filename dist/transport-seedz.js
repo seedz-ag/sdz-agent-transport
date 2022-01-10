@@ -5,43 +5,43 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const transport_1 = __importDefault(require("./transport"));
 class TransportSeedz extends transport_1.default {
-    constructor(credentials) {
-        super("http://localhost:3000/");
+    constructor(apiUrl, credentials) {
+        super(apiUrl);
+        this.uriMap = {};
+        this.setCredentials(credentials);
     }
-    async request(method = "GET", url, data, needsToken = false) {
-        console.log(url);
+    // GETTERS AND SETTERS
+    getCredentials() {
+        return this.credentials;
+    }
+    setCredentials(credentials) {
+        this.credentials = credentials;
+        return this;
+    }
+    getUriMap() {
+        return this.uriMap;
+    }
+    setUriMap(uriMap) {
+        this.uriMap = uriMap;
+        return this;
+    }
+    async request(method = "GET", url, data, needsToken = true) {
         return this.agent.request({
             data,
+            headers: {
+                ...(needsToken ? this.getCredentials() : {})
+            },
             method,
             url,
         });
     }
     async send(entity, body) {
         try {
-            return this.request("POST", "/batch", {
-                batch: [
-                    {
-                        body,
-                        id: "",
-                        method: "POST",
-                        headers: {
-                            client: "",
-                            guid: ""
-                        },
-                        uri: this.getURIMap(entity),
-                    }
-                ]
-            }, true);
+            return this.request("POST", this.uriMap[entity], body, true);
         }
         catch (exception) {
             this.onError(exception);
         }
-    }
-    getURIMap(entity) {
-        const map = {
-            cliente: 'client'
-        };
-        return map[entity];
     }
 }
 exports.default = TransportSeedz;

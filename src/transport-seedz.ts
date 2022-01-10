@@ -26,7 +26,7 @@ export default class TransportSeedz extends Transport {
     return this.uriMap;
   }
 
-  setUriMap(uriMap: { [key: string]: string}): this {
+  setUriMap(uriMap: { [key: string]: string }): this {
     this.uriMap = uriMap;
     return this;
   }
@@ -35,13 +35,15 @@ export default class TransportSeedz extends Transport {
     method: Method = "GET",
     url: string,
     data: any,
-    needsAuthentication = false 
+    needsAuthentication = false
   ): Promise<T> {
     return this.agent.request({
       data,
       headers: {
-        ...(needsAuthentication ? this.getCredentials() : {}) 
+        ...(needsAuthentication ? this.getCredentials() : {}),
       },
+      maxBodyLength: 1000000000,
+      maxContentLength: 100000000,
       method,
       url,
     });

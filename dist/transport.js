@@ -6,9 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
 class AbstractTransport {
     constructor(baseURL) {
-        if (new.target === AbstractTransport) {
-            throw new TypeError("Cannot construct Abstract instances directly");
-        }
         this.agent = axios_1.default.create({
             baseURL,
         });

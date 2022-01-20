@@ -1,11 +1,8 @@
 import axios, { Axios } from "axios";
 
-export default class AbstractTransport {
+export default abstract class AbstractTransport {
   public agent: Axios;
   constructor(baseURL: string) {
-    if (new.target === AbstractTransport) {
-      throw new TypeError("Cannot construct Abstract instances directly");
-    }
     this.agent = axios.create({
       baseURL,
     });

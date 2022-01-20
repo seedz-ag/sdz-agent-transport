@@ -1,5 +1,5 @@
 import { Axios } from "axios";
-export default class AbstractTransport {
+export default abstract class AbstractTransport {
     agent: Axios;
     constructor(baseURL: string);
     authenticate(): Promise<void>;

@@ -1,19 +1,26 @@
 import { AxiosResponse, Method } from "axios";
 import Transport from "./transport";
-import { Credentials } from "sdz-agent-types";
+import { APIEntity, Credentials } from "sdz-agent-types";
+
+type URIMap = {
+  [key: string]: string;
+};
 
 export default class TransportSeedz extends Transport {
   private credentials: Credentials;
+  private issuerUrl: string;
   private uriMap: { [key: string]: string } = {};
+  private token: string;
 
-  constructor(apiUrl: string, credentials: Credentials) {
+  constructor(issuerUrl: string, apiUrl: string, credentials: Credentials) {
     super(apiUrl);
     this.setCredentials(credentials);
+    this.setIssuerURL(issuerUrl);
   }
 
   // GETTERS AND SETTERS
 
-  getCredentials(): Credentials | undefined {
+  getCredentials(): Credentials {
     return this.credentials;
   }
 
@@ -22,25 +29,60 @@ export default class TransportSeedz extends Transport {
     return this;
   }
 
-  getUriMap(): { [key: string]: string } {
+  getIssuerURL(): string {
+    return this.issuerUrl;
+  }
+
+  setIssuerURL(issuerUrl: string): this {
+    this.issuerUrl = issuerUrl;
+    return this;
+  }
+
+  getOpenIdHeaders() {
+    return {
+      Authorization: `Bearer ${this.token}`,
+      ClientId: this.getCredentials().client_id,
+    };
+  }
+
+  getUriMap(): URIMap {
     return this.uriMap;
   }
 
-  setUriMap(uriMap: { [key: string]: string }): this {
+  setUriMap(uriMap: URIMap): this {
     this.uriMap = uriMap;
     return this;
+  }
+
+  // METHODS
+
+  async authenticate(): Promise<void> {
+    try {
+      const { data }: any = await this.agent.request({
+        url: `${this.getIssuerURL()}/token`,
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        data: `client_id=${encodeURIComponent(
+          this.getCredentials().client_id
+        )}&client_secret=${encodeURIComponent(
+          this.getCredentials().client_secret
+        )}&grant_type=client_credentials`,
+        method: "POST",
+      });
+      this.token = data.access_token;
+    } catch (e) {
+      throw new Error("Authentication failed");
+    }
   }
 
   private async request<T>(
     method: Method = "GET",
     url: string,
-    data: any,
-    needsAuthentication = false
+    data: any
   ): Promise<T> {
     return this.agent.request({
       data,
       headers: {
-        ...(needsAuthentication ? this.getCredentials() : {}),
+        ...this.getOpenIdHeaders(),
       },
       maxBodyLength: 1000000000,
       maxContentLength: 100000000,
@@ -49,9 +91,10 @@ export default class TransportSeedz extends Transport {
     });
   }
 
-  async send(entity: string, body: any): Promise<AxiosResponse | void> {
+  async send(entity: string, body: any): Promise<AxiosResponse<any> | void> {
     try {
-      return this.request("POST", this.uriMap[entity], body, true);
+      !this.token && (await this.authenticate());
+      return this.request("POST", this.uriMap[entity], body);
     } catch (exception: unknown) {
       this.onError(exception);
     }

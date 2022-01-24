@@ -2,7 +2,6 @@
   "name": "sdz-agent-transport",
   "version": "1.0.0",
   "license": "Apache",
-  "main": "./dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc --declaration"

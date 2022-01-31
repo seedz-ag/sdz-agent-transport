@@ -16,7 +16,6 @@ export default class TransportSeedz extends Transport {
     setIssuerURL(issuerUrl: string): this;
     getOpenIdHeaders(): {
         Authorization: string;
-        ClientId: any;
     };
     getToken(): string;
     setToken(token: string): this;

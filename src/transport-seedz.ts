@@ -41,7 +41,6 @@ export default class TransportSeedz extends Transport {
   getOpenIdHeaders() {
     return {
       Authorization: `Bearer ${this.token}`,
-      ClientId: this.getCredentials().client_id,
     };
   }
 

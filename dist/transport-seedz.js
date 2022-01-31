@@ -29,7 +29,6 @@ class TransportSeedz extends transport_1.default {
     getOpenIdHeaders() {
         return {
             Authorization: `Bearer ${this.token}`,
-            ClientId: this.getCredentials().client_id,
         };
     }
     getToken() {

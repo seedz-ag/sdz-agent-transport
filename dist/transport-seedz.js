@@ -32,6 +32,13 @@ class TransportSeedz extends transport_1.default {
             ClientId: this.getCredentials().client_id,
         };
     }
+    getToken() {
+        return this.token;
+    }
+    setToken(token) {
+        this.token = token;
+        return this;
+    }
     getUriMap() {
         return this.uriMap;
     }

@@ -9,15 +9,17 @@ export default class TransportSeedz extends Transport {
     private issuerUrl;
     private uriMap;
     private token;
-    constructor(issuerUrl: string, apiUrl: string, credentials: Credentials);
+    constructor(issuerUrl: string, apiUrl: string, credentials?: Credentials);
     getCredentials(): Credentials;
-    setCredentials(credentials: Credentials): this;
+    setCredentials(credentials?: Credentials): this;
     getIssuerURL(): string;
     setIssuerURL(issuerUrl: string): this;
     getOpenIdHeaders(): {
         Authorization: string;
         ClientId: any;
     };
+    getToken(): string;
+    setToken(token: string): this;
     getUriMap(): URIMap;
     setUriMap(uriMap: URIMap): this;
     authenticate(): Promise<void>;

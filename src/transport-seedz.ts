@@ -7,12 +7,12 @@ type URIMap = {
 };
 
 export default class TransportSeedz extends Transport {
-  private credentials: Credentials;
+  private credentials: Credentials | undefined;
   private issuerUrl: string;
   private uriMap: { [key: string]: string } = {};
   private token: string;
 
-  constructor(issuerUrl: string, apiUrl: string, credentials: Credentials) {
+  constructor(issuerUrl: string, apiUrl: string, credentials?: Credentials) {
     super(apiUrl);
     this.setCredentials(credentials);
     this.setIssuerURL(issuerUrl);
@@ -24,7 +24,7 @@ export default class TransportSeedz extends Transport {
     return this.credentials;
   }
 
-  setCredentials(credentials: Credentials): this {
+  setCredentials(credentials?: Credentials): this {
     this.credentials = credentials;
     return this;
   }
@@ -43,6 +43,15 @@ export default class TransportSeedz extends Transport {
       Authorization: `Bearer ${this.token}`,
       ClientId: this.getCredentials().client_id,
     };
+  }
+
+  getToken(): string {
+    return this.token;
+  }
+
+  setToken(token: string): this {
+    this.token = token;
+    return this;
   }
 
   getUriMap(): URIMap {

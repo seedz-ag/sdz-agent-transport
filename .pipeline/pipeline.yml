@@ -6,7 +6,7 @@ resources:
     - repository: template
       type: git
       name: Devops/pipeline-templates
-      ref: main
+      ref: master
 
 extends:
   template: node/node.github.v1.yml@template

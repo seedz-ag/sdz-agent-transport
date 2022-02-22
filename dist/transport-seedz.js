@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const moment_1 = __importDefault(require("moment"));
 const transport_1 = __importDefault(require("./transport"));
 class TransportSeedz extends transport_1.default {
     constructor(issuerUrl, apiUrl, credentials) {
@@ -55,10 +56,16 @@ class TransportSeedz extends transport_1.default {
                 method: "POST",
             });
             this.token = data.access_token;
+            this.refresh(data.expires_at);
         }
         catch (e) {
             throw new Error("Authentication failed");
         }
+    }
+    async refresh(expires_at) {
+        clearTimeout(this.timeout);
+        this.timeout = setTimeout(this.authenticate.bind(this), (0, moment_1.default)(expires_at, "X").diff((0, moment_1.default)(), "seconds") * 900);
+        return this;
     }
     async request(method = "GET", url, data) {
         return this.agent.request({

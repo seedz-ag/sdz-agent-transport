@@ -82,7 +82,6 @@ export default class TransportSeedz extends Transport {
       this.token = data.access_token;
       this.refresh(data.expires_at);
     } catch (e) {
-      console.log(e);
       throw new Error("Authentication failed");
     }
   }

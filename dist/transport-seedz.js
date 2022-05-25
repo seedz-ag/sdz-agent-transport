@@ -59,7 +59,6 @@ class TransportSeedz extends transport_1.default {
             this.refresh(data.expires_at);
         }
         catch (e) {
-            console.log(e);
             throw new Error("Authentication failed");
         }
     }

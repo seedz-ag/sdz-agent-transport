@@ -3,8 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const moment_1 = __importDefault(require("moment"));
 const transport_1 = __importDefault(require("./transport"));
+const moment_1 = __importDefault(require("moment"));
 class TransportSeedz extends transport_1.default {
     constructor(issuerUrl, apiUrl, credentials) {
         super(apiUrl);
@@ -59,6 +59,7 @@ class TransportSeedz extends transport_1.default {
             this.refresh(data.expires_at);
         }
         catch (e) {
+            console.log(e);
             throw new Error("Authentication failed");
         }
     }

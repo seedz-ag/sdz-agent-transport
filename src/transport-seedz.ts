@@ -1,8 +1,8 @@
 import { AxiosResponse, Method } from "axios";
-import moment from "moment";
-import { Credentials } from "sdz-agent-types";
 
+import { Credentials } from "sdz-agent-types";
 import Transport from "./transport";
+import moment from "moment";
 
 type URIMap = {
   [key: string]: string;
@@ -12,7 +12,7 @@ export default class TransportSeedz extends Transport {
   private credentials: Credentials | undefined;
   private issuerUrl: string;
   private uriMap: { [key: string]: string } = {};
-  private timeout: NodeJS.Timeout; 
+  private timeout: any; 
   private token: string;
 
   constructor(issuerUrl: string, apiUrl: string, credentials?: Credentials) {
@@ -82,6 +82,7 @@ export default class TransportSeedz extends Transport {
       this.token = data.access_token;
       this.refresh(data.expires_at);
     } catch (e) {
+      console.log(e);
       throw new Error("Authentication failed");
     }
   }

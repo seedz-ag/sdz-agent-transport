@@ -11,7 +11,7 @@
   "dependencies": {
     "axios": "^0.22.0",
     "moment": "^2.29.1",
-    "sdz-agent-types": "https://github.com/seedz-ag/sdz-agent-types.git"
+    "sdz-agent-types": "https://github.com/seedz-ag/sdz-agent-types.git#bugfix/#24905"
   },
   "devDependencies": {
     "typescript": "^4.4.3"

@@ -9,7 +9,7 @@
     "build": "tsc --declaration"
   },
   "dependencies": {
-    "axios": "^0.22.0",
+    "axios": "^0.27.2",
     "moment": "^2.29.1",
     "sdz-agent-types": "https://github.com/seedz-ag/sdz-agent-types.git"
   },

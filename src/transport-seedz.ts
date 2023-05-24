@@ -112,10 +112,13 @@ export default class TransportSeedz extends Transport {
     });
   }
 
-  async send(entity: string, body: any): Promise<AxiosResponse<any> | void> {
+  async send<T = any, K = any>(entity: string, body: any): Promise<AxiosResponse<T> | void> {
     try {
       !this.token && (await this.authenticate());
-      return this.request("POST", this.uriMap[entity] || entity, body);
+      const chunkSize = Number(process.env.CHUNK_SIZE || 250);
+      for (let i = 0; i < body.length; i += chunkSize) {
+        await this.request("POST", this.uriMap[entity] || entity, body.slice(i, i + chunkSize));
+      }
     } catch (exception: unknown) {
       this.onError(exception);
     }

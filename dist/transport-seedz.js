@@ -82,7 +82,10 @@ class TransportSeedz extends transport_1.default {
     async send(entity, body) {
         try {
             !this.token && (await this.authenticate());
-            return this.request("POST", this.uriMap[entity] || entity, body);
+            const chunkSize = Number(process.env.CHUNK_SIZE || 250);
+            for (let i = 0; i < body.length; i += chunkSize) {
+                await this.request("POST", this.uriMap[entity] || entity, body.slice(i, i + chunkSize));
+            }
         }
         catch (exception) {
             this.onError(exception);

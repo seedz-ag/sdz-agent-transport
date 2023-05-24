@@ -115,7 +115,7 @@ export default class TransportSeedz extends Transport {
   async send(entity: string, body: any): Promise<AxiosResponse<any> | void> {
     try {
       !this.token && (await this.authenticate());
-      return this.request("POST", this.uriMap[entity], body);
+      return this.request("POST", this.uriMap[entity] || entity, body);
     } catch (exception: unknown) {
       this.onError(exception);
     }

@@ -82,7 +82,7 @@ class TransportSeedz extends transport_1.default {
     async send(entity, body) {
         try {
             !this.token && (await this.authenticate());
-            return this.request("POST", this.uriMap[entity], body);
+            return this.request("POST", this.uriMap[entity] || entity, body);
         }
         catch (exception) {
             this.onError(exception);

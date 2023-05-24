@@ -25,6 +25,6 @@ export default class TransportSeedz extends Transport {
     authenticate(): Promise<void>;
     refresh(expires_at: number): Promise<this>;
     private request;
-    send(entity: string, body: any): Promise<AxiosResponse<any> | void>;
+    send<T = any, K = any>(entity: string, body: any): Promise<AxiosResponse<T> | void>;
 }
 export {};
